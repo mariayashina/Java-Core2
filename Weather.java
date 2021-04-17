@@ -1,43 +1,42 @@
-import okhttp3.OkHttpClient;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
 public class Weather {
-    public static void main(String[] args) throws IOException {
-        OkHttpClient client = new OkHttpClient()
-                .newBuilder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .followRedirects(true)
-                .retryOnConnectionFailure(true)
-                .build();
 
-        MediaType JSON = MediaType.parse("JSON");
+    private String date;
+    private String city;
+    private String temperature;
+    private String weatherText;
 
-        String authBodyString = "{" +
-                "\"username\": \"maria.yashina.16\", " +
-                "\"password\": \"Test12345\"" + "}";
-        System.out.println(authBodyString);
-        RequestBody authBody = RequestBody.create(authBodyString, JSON);
-
-        Request request = new Request.Builder()
-                .url("http://dataservice.accuweather.com/forecasts/v1/daily/5day/295212?apikey=H6ldpZ8Uej2NF2cOGdMmZa5wo1wWr0vq")
-                .post(authBody)
-                .build();
-
-        Response responseWithToken = client.newCall(request).execute();
-        String responseBody = responseWithToken.body().string();
-
-        System.out.println(responseBody);
-
-        String token = responseBody.split(":")[1];
-        token = token.replaceAll("[\"}]", "");
-        System.out.println(token);
+    public Weather(String date, String city, String temperature, String weatherText) {
+        this.date = date;
+        this.city = city;
+        this.temperature = temperature;
+        this.weatherText = weatherText;
     }
 
+    public Weather() {
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getTemperature() {
+        return temperature;
+    }
+
+    public String getWeatherText() {
+        return weatherText;
+    }
+
+    @Override
+    public String toString() {
+        return date + " в городе " + city + " будет погода " + weatherText + " с температурой " + temperature + " °C";
+    }
 }
